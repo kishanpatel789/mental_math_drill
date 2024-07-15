@@ -3,3 +3,4 @@ notes.md
 .env
 *.swp
 credentials.json
+__pycache__
