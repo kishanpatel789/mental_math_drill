@@ -15,13 +15,35 @@ message['Subject'] = subject
 body_text = 'This is a test message.'
 body_html = """
     <html>
-        <head>
-        </head>
-        <body>
-            <p>Hello!</p>
-            <p>Welcome to another math <strong>challenge</strong>.</p>
-        </body>
-    </html>
+    <head>
+        <style>
+            .problem {
+                font-family: 'Courier New', Courier, monospace;
+                text-align: right;
+                margin: 20px auto;
+                width: fit-content;
+            }
+            .number, .operator {
+                display: block;
+                margin: 0;
+                white-space: pre;
+            }
+            .line {
+                border-top: 1px solid #000;
+                margin: 5px 0;
+            }
+        </style>
+    </head>
+    <body>
+        <p>Hello!</p>
+        <p>Welcome to another math <strong>challenge</strong>.</p>
+        <div class="problem">
+            <span class="number">123</span>
+            <span class="operator">+   67</span>
+            <div class="line"></div>
+        </div>
+    </body>
+</html>
 """
 
 message.attach(MIMEText(body_text, 'plain'))
