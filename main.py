@@ -1,23 +1,39 @@
-import smtplib, ssl
-from dotenv import load_dotenv
-import os
+import boto3
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from datetime import datetime
 
-load_dotenv()
-SERVICE_USER = os.getenv('SERVICE_USER')
-SERVICE_PASSWORD = os.getenv('SERVICE_PASSWORD')
-TARGET_EMAIL_ADDRESS = os.getenv('TARGET_EMAIL_ADDRESS')
+sender = 'Mental Math Drill <no-reply@kpdata.dev>'
+recipient = 'Kishan <kishanpatel789@gmail.com>'
+subject = f"Mental Math Drill - {datetime.today().strftime('%m/%d')}"
 
-port = 465 # for ssl
+message = MIMEMultipart('alternative')
+message['From'] = sender
+message['To'] = recipient
+message['Subject'] = subject
 
-message = """
-Subject: Test Message
-
-This message was sent programmatically!
+body_text = 'This is a test message.'
+body_html = """
+    <html>
+        <head>
+        </head>
+        <body>
+            <p>Hello!</p>
+            <p>Welcome to another math <strong>challenge</strong>.</p>
+        </body>
+    </html>
 """
 
-# create secure ssl context
-context = ssl.create_default_context()
+message.attach(MIMEText(body_text, 'plain'))
+message.attach(MIMEText(body_html, 'html'))
 
-with smtplib.SMTP_SSL('smtp.gmail.com', port, context=context) as server:
-    server.login(SERVICE_USER, SERVICE_PASSWORD)
-    server.sendmail(SERVICE_USER, TARGET_EMAIL_ADDRESS, message)
+
+ses = boto3.client('sesv2')
+
+ses.send_email(
+    Content={
+        'Raw': {
+            'Data': message.as_bytes()
+        }
+    }
+)
