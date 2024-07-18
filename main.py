@@ -2,7 +2,19 @@ import boto3
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from datetime import datetime
+from problem import generate_problems
+from jinja2 import Environment, FileSystemLoader
 
+# generate problems and html
+problems = generate_problems(5, ['+', '-'])
+env = Environment(loader=FileSystemLoader('./templates'))
+template = env.get_template('template.html')
+
+output = template.render(problems=problems)
+with open('out/out.html', 'w') as f:
+    f.write(output)
+
+# generate email
 sender = 'Mental Math Drill <no-reply@kpdata.dev>'
 recipient = 'Kishan <kishanpatel789@gmail.com>'
 subject = f"Mental Math Drill - {datetime.today().strftime('%m/%d')}"
@@ -13,45 +25,13 @@ message['To'] = recipient
 message['Subject'] = subject
 
 body_text = 'This is a test message.'
-body_html = """
-    <html>
-    <head>
-        <style>
-            .problem {
-                font-family: 'Courier New', Courier, monospace;
-                text-align: right;
-                margin: 20px auto;
-                width: fit-content;
-            }
-            .number, .operator {
-                display: block;
-                margin: 0;
-                white-space: pre;
-            }
-            .line {
-                border-top: 1px solid #000;
-                margin: 5px 0;
-            }
-        </style>
-    </head>
-    <body>
-        <p>Hello!</p>
-        <p>Welcome to another math <strong>challenge</strong>.</p>
-        <div class="problem">
-            <span class="number">123</span>
-            <span class="operator">+   67</span>
-            <div class="line"></div>
-        </div>
-    </body>
-</html>
-"""
+body_html = output
 
 message.attach(MIMEText(body_text, 'plain'))
 message.attach(MIMEText(body_html, 'html'))
 
-
+# send email
 ses = boto3.client('sesv2')
-
 ses.send_email(
     Content={
         'Raw': {

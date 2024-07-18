@@ -16,11 +16,17 @@
                 border-top: 1px solid #000;
                 margin: 5px 0;
             }
+            .answer {
+                font-family: 'Courier New', Courier, monospace;
+                text-align: right;
+                margin: 20px auto;
+                width: fit-content;
+            }
+
         </style>
     </head>
     <body>
-        <p>Hello!</p>
-        <p>Welcome to another math <strong>challenge</strong>.</p>
+        <h1>Challenges</h1>
         {% for prob in problems %}
         <div class="problem">
             <span class="number">{{ prob.first_num }}</span>
@@ -31,8 +37,7 @@
 
         <h2>Answers</h2>
         {% for prob in problems %}
-        <p>{{ loop.index }}: {{ "{0:,}".format(prob.answer) }}</p>
-
+        <p class="answer">{{ loop.index }}: {{ "{0:,}".format(prob.answer) }}</p>
         {% endfor %}
 
     </body>
