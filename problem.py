@@ -36,11 +36,15 @@ class Problem():
 
         return output
 
-def generate_problems(num_probs: int):
+def generate_problems(num_probs: int, operators = ['+', '-', '*', '/']):
+
+    if not all(o in Problem.valid_operators for o in operators):
+        raise ValueError(f"Operators must be subset of '{Problem.valid_operators}'. Received '{operators}'.")
+
     problems = []
 
     for _ in range(num_probs):
-        operator = random.choice(Problem.valid_operators)
+        operator = random.choice(operators)
         first_num = random.randint(2, 999)
         second_num = random.randint(2, 999)
         prob = Problem(first_num, second_num, operator)
