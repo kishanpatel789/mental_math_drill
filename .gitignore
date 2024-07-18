@@ -4,3 +4,4 @@ notes.md
 *.swp
 credentials.json
 __pycache__
+out*
