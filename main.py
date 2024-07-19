@@ -7,12 +7,20 @@ from jinja2 import Environment, FileSystemLoader
 
 # generate problems and html
 problems = generate_problems(5, ['+', '-'])
-env = Environment(loader=FileSystemLoader('./templates'))
-template = env.get_template('template.html')
+env = Environment(
+    loader=FileSystemLoader('./templates'),
+    trim_blocks=True,
+    lstrip_blocks=True,
+)
+template_txt = env.get_template('template.txt')
+template_html = env.get_template('template.html')
 
-output = template.render(problems=problems)
+output_txt = template_txt.render(problems=problems)
+output_html = template_html.render(problems=problems)
+with open('out/out.txt', 'w') as f:
+    f.write(output_txt)
 with open('out/out.html', 'w') as f:
-    f.write(output)
+    f.write(output_html)
 
 # generate email
 sender = 'Mental Math Drill <no-reply@kpdata.dev>'
@@ -24,11 +32,8 @@ message['From'] = sender
 message['To'] = recipient
 message['Subject'] = subject
 
-body_text = 'This is a test message.'
-body_html = output
-
-message.attach(MIMEText(body_text, 'plain'))
-message.attach(MIMEText(body_html, 'html'))
+message.attach(MIMEText(output_txt, 'plain'))
+message.attach(MIMEText(output_html, 'html'))
 
 # send email
 ses = boto3.client('sesv2')

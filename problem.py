@@ -38,7 +38,10 @@ class Problem():
         ]
 
     def render(self):
-        print('\n'.join(self.display_components))
+        return '\n'.join(self.display_components)
+    
+    def print(self):
+        print(self.render())
 
 def generate_problems(num_probs: int, operators = ['+', '-', '*', '/']):
 
