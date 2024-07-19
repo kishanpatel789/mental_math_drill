@@ -7,6 +7,7 @@ class Problem():
         if isinstance(first_num, int) and isinstance(second_num, int):
             self.first_num = first_num
             self.second_num = second_num
+            self.max_num_len = max(len(str(first_num)), len(str(second_num)))
         else:
             raise TypeError(f"First number and second number should be integers.")
         
@@ -29,10 +30,9 @@ class Problem():
     def render(self):
         first_str = str(self.first_num)
         second_str = str(self.second_num)
-        max_num_len = max(len(first_str), len(second_str))
-        output = f"{first_str.rjust(max_num_len + 3)}\n"
-        output += f"{self.operator} {second_str.rjust(max_num_len + 1)}\n"
-        output += f"{'‾'*(max_num_len + 3)}"
+        output = f"{first_str.rjust(self.max_num_len + 2)}\n"
+        output += f"{self.operator} {second_str.rjust(self.max_num_len)}\n"
+        output += f"{'‾'*(self.max_num_len + 2)}"
 
         return output
 
