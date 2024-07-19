@@ -29,8 +29,8 @@
         <h1>Challenges</h1>
         {% for prob in problems %}
         <div class="problem">
-            <span class="number">{{ prob.first_num }}</span>
-            <span class="operator">{{ prob.operator + ' ' + prob.second_num|string }}</span>
+            <span class="number">{{ prob.display_components[0] }}</span>
+            <span class="operator">{{ prob.display_components[1] }}</span>
             <div class="line"></div>
         </div>
         {% endfor %}

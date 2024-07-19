@@ -7,7 +7,11 @@ class Problem():
         if isinstance(first_num, int) and isinstance(second_num, int):
             self.first_num = first_num
             self.second_num = second_num
-            self.max_num_len = max(len(str(first_num)), len(str(second_num)))
+
+            first_str = str(self.first_num)
+            second_str = str(self.second_num)
+
+            self.max_num_len = max(len(first_str), len(second_str))
         else:
             raise TypeError(f"First number and second number should be integers.")
         
@@ -27,14 +31,14 @@ class Problem():
         else:
             self.answer = None
 
-    def render(self):
-        first_str = str(self.first_num)
-        second_str = str(self.second_num)
-        output = f"{first_str.rjust(self.max_num_len + 2)}\n"
-        output += f"{self.operator} {second_str.rjust(self.max_num_len)}\n"
-        output += f"{'‾'*(self.max_num_len + 2)}"
+        self.display_components = [
+            f"{first_str.rjust(self.max_num_len + 2)}",
+            f"{self.operator} {second_str.rjust(self.max_num_len)}",
+            f"{'‾'*(self.max_num_len + 2)}",
+        ]
 
-        return output
+    def render(self):
+        print('\n'.join(self.display_components))
 
 def generate_problems(num_probs: int, operators = ['+', '-', '*', '/']):
 
