@@ -1,5 +1,6 @@
 import json
 import boto3
+import os
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from datetime import datetime
@@ -25,8 +26,8 @@ def main(*args):
     #     f.write(output_html)
 
     # generate email
-    sender = 'Mental Math Drill <no-reply@kpdata.dev>'
-    recipient = 'Kishan <kishanpatel789@gmail.com>'
+    sender = os.environ['MMD_SENDER']
+    recipient = os.environ['MMD_RECIPIENT']
     subject = f"Mental Math Drill - {datetime.today().strftime('%m/%d')}"
 
     message = MIMEMultipart('alternative')
@@ -55,4 +56,5 @@ def main(*args):
     }
 
 if __name__ == '__main__':
-    main()
+    response = main()
+    print(response)
