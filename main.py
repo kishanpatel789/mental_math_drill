@@ -1,3 +1,4 @@
+import json
 import boto3
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -5,7 +6,7 @@ from datetime import datetime
 from problem import generate_problems
 from jinja2 import Environment, FileSystemLoader
 
-def main():
+def main(*args):
     # generate problems and html
     problems = generate_problems(5, ['+', '-'])
     env = Environment(
@@ -38,13 +39,20 @@ def main():
 
     # send email
     ses = boto3.client('sesv2')
-    ses.send_email(
+    response = ses.send_email(
         Content={
             'Raw': {
                 'Data': message.as_bytes()
             }
         }
     )
+
+    print(response)
+
+    return {
+        'statusCode': 200,
+        'body': json.dumps(f"Email sent successfully. MessageId is: {response['MessageId']}")
+    }
 
 if __name__ == '__main__':
     main()

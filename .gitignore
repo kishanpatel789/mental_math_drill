@@ -5,3 +5,4 @@ notes.md
 credentials.json
 __pycache__
 out*
+*.zip
