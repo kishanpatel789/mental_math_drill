@@ -8,3 +8,4 @@ out*
 *.zip
 .terraform*
 *.tfstate*
+terraform/scratch.json

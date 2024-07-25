@@ -73,5 +73,9 @@ resource "aws_iam_role" "lambda_execution_role" {
         }
     POLICY
   }
+}
 
+resource "aws_lambda_function" "lambda_function" {
+  function_name = "mental-math-drill-tf"
+  role          = aws_iam_role.lambda_execution_role.arn
 }
