@@ -82,6 +82,19 @@ data "archive_file" "lambda_files" {
   excludes = [".env", "__pycache__"]
 }
 
+resource "terraform_data" "archive_lambda_layer" {
+  provisioner "local-exec" {
+    interpreter = ["/bin/bash", "-c"]
+    command     = <<-COMMANDS
+        mkdir python
+        cp -r ../venv/lib python/
+        zip -r layer_content.zip python
+        rm -r python
+      COMMANDS
+  }
+}
+
+
 resource "aws_lambda_function" "lambda_function" {
   function_name = var.lambda_function_name
   role          = aws_iam_role.lambda_execution_role.arn
@@ -99,8 +112,9 @@ resource "aws_lambda_function" "lambda_function" {
 }
 
 resource "aws_lambda_layer_version" "lambda_layer" {
-  layer_name = var.lambda_layer_name
-
-  filename            = "${path.root}/../layer_content.zip"
+  layer_name          = var.lambda_layer_name
+  filename            = "${path.root}/layer_content.zip"
   compatible_runtimes = ["python3.10"]
+
+  depends_on = [terraform_data.archive_lambda_layer]
 }
