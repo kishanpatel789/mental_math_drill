@@ -53,7 +53,6 @@ resource "aws_iam_role" "lambda_execution_role" {
         }
     POLICY
   }
-  # replace log group name with lambda resource name ref
 
   inline_policy {
     name   = "send-ses-email"
@@ -75,10 +74,18 @@ resource "aws_iam_role" "lambda_execution_role" {
   }
 }
 
+data "archive_file" "lambda_files" {
+  type        = "zip"
+  source_dir  = "${path.root}/../src/"
+  output_path = "${path.root}/lambda_deployment.zip"
+
+  excludes = [".env", "__pycache__"]
+}
+
 resource "aws_lambda_function" "lambda_function" {
   function_name = var.lambda_function_name
   role          = aws_iam_role.lambda_execution_role.arn
-  filename      = "${path.root}/../lambda_deployment.zip"
+  filename      = data.archive_file.lambda_files.output_path
   handler       = "main.main"
   runtime       = "python3.10"
   layers        = [aws_lambda_layer_version.lambda_layer.arn]
