@@ -16,6 +16,18 @@ variable "bucket_name" {
   type        = string
 }
 
+variable "lambda_function_name" {
+  description = "Name of lambda function; must be unique in AWS account"
+  default     = "mental-math-drill-tf"
+  type        = string
+}
+
+variable "lambda_layer_name" {
+  description = "Name of lambda layer; must be unique in AWS account"
+  default     = "mental_math_drill_layer_tf"
+  type        = string
+}
+
 variable "email_sender" {
   description = "Address of email sender; must be verified on SES"
   type        = string

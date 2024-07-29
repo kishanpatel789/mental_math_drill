@@ -46,7 +46,7 @@ resource "aws_iam_role" "lambda_execution_role" {
                         "logs:PutLogEvents"
                     ],
                     "Resource": [
-                        "arn:aws:logs:${var.region}:${local.aws_account_id}:log-group:/aws/lambda/mental-math-drill-tf:*" 
+                        "arn:aws:logs:${var.region}:${local.aws_account_id}:log-group:/aws/lambda/${var.lambda_function_name}:*" 
                     ]
                 }
             ]
@@ -76,12 +76,12 @@ resource "aws_iam_role" "lambda_execution_role" {
 }
 
 resource "aws_lambda_function" "lambda_function" {
-  function_name = "mental-math-drill-tf"
+  function_name = var.lambda_function_name
   role          = aws_iam_role.lambda_execution_role.arn
   filename      = "${path.root}/../lambda_deployment.zip"
   handler       = "main.main"
   runtime       = "python3.10"
-  layers = [aws_lambda_layer_version.lambda_layer.arn]
+  layers        = [aws_lambda_layer_version.lambda_layer.arn]
 
   environment {
     variables = {
@@ -92,8 +92,8 @@ resource "aws_lambda_function" "lambda_function" {
 }
 
 resource "aws_lambda_layer_version" "lambda_layer" {
-    layer_name = "mental_math_drill_layer_tf"
+  layer_name = var.lambda_layer_name
 
-  filename      = "${path.root}/../layer_content.zip"
+  filename            = "${path.root}/../layer_content.zip"
   compatible_runtimes = ["python3.10"]
 }
