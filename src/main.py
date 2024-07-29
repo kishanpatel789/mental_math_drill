@@ -20,9 +20,9 @@ def main(*args):
 
     output_txt = template_txt.render(problems=problems)
     output_html = template_html.render(problems=problems)
-    # with open('out/out.txt', 'w') as f:
+    # with open('../out/out.txt', 'w') as f:
     #     f.write(output_txt)
-    # with open('out/out.html', 'w') as f:
+    # with open('../out/out.html', 'w') as f:
     #     f.write(output_html)
 
     # generate email
