@@ -81,6 +81,7 @@ resource "aws_lambda_function" "lambda_function" {
   filename      = "${path.root}/../lambda_deployment.zip"
   handler       = "main.main"
   runtime       = "python3.10"
+  layers = [aws_lambda_layer_version.lambda_layer.arn]
 
   environment {
     variables = {
@@ -90,3 +91,9 @@ resource "aws_lambda_function" "lambda_function" {
   }
 }
 
+resource "aws_lambda_layer_version" "lambda_layer" {
+    layer_name = "mental_math_drill_layer_tf"
+
+  filename      = "${path.root}/../layer_content.zip"
+  compatible_runtimes = ["python3.10"]
+}
