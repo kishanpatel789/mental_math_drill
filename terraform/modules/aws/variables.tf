@@ -18,14 +18,12 @@ variable "bucket_name" {
 
 variable "email_sender" {
   description = "Address of email sender; must be verified on SES"
-  default     = ""
   type        = string
-  nullable = false
+  nullable    = false
 }
 
 variable "email_recipient" {
   description = "Address of email recipient; must be verified on SES if in sandbox"
-  default     = ""
   type        = string
-  nullable = false
+  nullable    = false
 }

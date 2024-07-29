@@ -9,3 +9,4 @@ out*
 .terraform*
 *.tfstate*
 terraform/scratch.json
+*.tfvars

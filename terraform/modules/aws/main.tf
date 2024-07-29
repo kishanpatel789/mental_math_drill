@@ -80,12 +80,12 @@ resource "aws_lambda_function" "lambda_function" {
   role          = aws_iam_role.lambda_execution_role.arn
   filename      = "${path.root}/../lambda_deployment.zip"
   handler       = "main.main"
-  runtime = "python3.10"
+  runtime       = "python3.10"
 
   environment {
     variables = {
-      "MMD_RECIPIENT" = var.email_sender,
-      "MMD_SENDER"    = var.email_sender
+      "MMD_SENDER"    = var.email_sender,
+      "MMD_RECIPIENT" = var.email_recipient
     }
   }
 }

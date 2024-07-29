@@ -11,4 +11,7 @@ terraform {
 
 module "aws" {
   source = "./modules/aws"
+
+  email_sender    = var.aws_email_sender
+  email_recipient = var.aws_email_recipient
 }
