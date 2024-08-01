@@ -166,3 +166,22 @@ resource "aws_lambda_layer_version" "lambda_layer" {
 }
 
 # eventbridge artifacts
+resource "aws_scheduler_schedule" "eventbridge_scheduler" {
+  name = "mental-math-drill-tf"
+  group_name = "default"
+  schedule_expression = "cron(5 11 ? * 2-7 *)"
+  schedule_expression_timezone = "UTC"
+
+  flexible_time_window {
+    maximum_window_in_minutes = 5
+    mode = "FLEXIBLE"
+  }
+  target {
+    arn = aws_lambda_function.lambda_function.arn 
+    role_arn = aws_iam_role.eventbridge_execution_role.arn
+    retry_policy {
+      maximum_event_age_in_seconds = 7200
+      maximum_retry_attempts = 2
+    }
+  }
+}
