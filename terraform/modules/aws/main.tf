@@ -169,8 +169,8 @@ resource "aws_lambda_layer_version" "lambda_layer" {
 resource "aws_scheduler_schedule" "eventbridge_scheduler" {
   name = "mental-math-drill-tf"
   group_name = "default"
-  schedule_expression = "cron(5 11 ? * 2-7 *)"
-  schedule_expression_timezone = "UTC"
+  schedule_expression = "cron(${var.email_cron_schedule})"
+  schedule_expression_timezone = var.email_cron_schedule_timezone
 
   flexible_time_window {
     maximum_window_in_minutes = 5
