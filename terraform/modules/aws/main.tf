@@ -9,23 +9,23 @@ locals {
   aws_account_id = data.aws_caller_identity.current.account_id
 }
 
-
+# iam roles
 resource "aws_iam_role" "lambda_execution_role" {
   name = "mental-math-drill-lambda-execution-tf"
 
   assume_role_policy = <<-POLICY
-    {
-        "Version": "2012-10-17",
-        "Statement": [
-            {
-                "Effect": "Allow",
-                "Principal": {
-                    "Service": "lambda.amazonaws.com"
-                },
-                "Action": "sts:AssumeRole"
-            }
-        ]
-    }
+      {
+          "Version": "2012-10-17",
+          "Statement": [
+              {
+                  "Effect": "Allow",
+                  "Principal": {
+                      "Service": "lambda.amazonaws.com"
+                  },
+                  "Action": "sts:AssumeRole"
+              }
+          ]
+      }
   POLICY
 
   inline_policy {
@@ -74,6 +74,51 @@ resource "aws_iam_role" "lambda_execution_role" {
   }
 }
 
+resource "aws_iam_role" "eventbridge_execution_role" {
+  name = "mental-math-drill-eventbridge-execution-tf"
+
+  assume_role_policy = <<-POLICY
+      {
+          "Version": "2012-10-17",
+          "Statement": [
+              {
+                  "Effect": "Allow",
+                  "Principal": {
+                      "Service": "scheduler.amazonaws.com"
+                  },
+                  "Action": "sts:AssumeRole",
+                  "Condition": {
+                      "StringEquals": {
+                          "aws:SourceAccount": "${local.aws_account_id}"
+                      }
+                  }
+              }
+          ]
+      }
+  POLICY
+
+  inline_policy {
+    name   = "invoke-lambda"
+    policy = <<-POLICY
+        {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Action": [
+                        "lambda:InvokeFunction"
+                    ],
+                    "Resource": [
+                        "arn:aws:lambda:us-east-1:${local.aws_account_id}:function:${var.lambda_function_name}:*",
+                        "arn:aws:lambda:us-east-1:${local.aws_account_id}:function:${var.lambda_function_name}"
+                    ]
+                }
+            ]
+        }
+    POLICY
+  }
+}
+
 data "archive_file" "lambda_files" {
   type        = "zip"
   source_dir  = "${path.root}/../src/"
@@ -95,7 +140,7 @@ resource "terraform_data" "archive_lambda_layer" {
   }
 }
 
-
+# lambda artifacts
 resource "aws_lambda_function" "lambda_function" {
   function_name = var.lambda_function_name
   role          = aws_iam_role.lambda_execution_role.arn
@@ -119,3 +164,5 @@ resource "aws_lambda_layer_version" "lambda_layer" {
 
   depends_on = [terraform_data.archive_lambda_layer]
 }
+
+# eventbridge artifacts
