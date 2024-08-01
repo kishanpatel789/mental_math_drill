@@ -4,7 +4,8 @@ notes.md
 *.swp
 credentials.json
 __pycache__
-out*
+out
+out/*
 *.zip
 .terraform*
 *.tfstate*

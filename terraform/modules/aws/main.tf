@@ -88,8 +88,9 @@ resource "terraform_data" "archive_lambda_layer" {
     command     = <<-COMMANDS
         mkdir python
         cp -r ../venv/lib python/
-        zip -r layer_content.zip python
+        zip -r -q layer_content.zip python
         rm -r python
+        echo "layer_content.zip is ready"
       COMMANDS
   }
 }
