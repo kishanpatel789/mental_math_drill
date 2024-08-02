@@ -9,5 +9,5 @@ CHALLENGES
 ANSWERS
 
 {% for prob in problems %}
-{{ loop.index }}: {{ "{0:,}".format(prob.answer) }}
+{{ loop.index }}: {{ prob.display_answer }}
 {% endfor %}
