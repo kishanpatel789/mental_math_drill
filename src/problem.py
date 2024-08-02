@@ -47,9 +47,12 @@ def generate_problems(num_probs: int, operators = ['+', '-', '*', '/']):
 
     if not all(o in Problem.valid_operators for o in operators):
         raise ValueError(f"Operators must be subset of '{Problem.valid_operators}'. Received '{operators}'.")
+    
+    if len(operators) == 0:
+        raise ValueError(f"Must choose at least one operator from the following: '{Problem.valid_operators}'. Received '{operators}'.")
+
 
     problems = []
-
     for _ in range(num_probs):
         operator = random.choice(operators)
         first_num = random.randint(2, 999)

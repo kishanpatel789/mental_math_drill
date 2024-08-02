@@ -4,12 +4,25 @@ import os
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from datetime import datetime
-from problem import generate_problems
+from problem import generate_problems, Problem
 from jinja2 import Environment, FileSystemLoader
 
 def main(*args):
+    # read environment vars
+    sender = os.environ['MMD_SENDER']
+    recipient = os.environ['MMD_RECIPIENT']
+    num_probs = int(os.environ.get('MMD_NUM_PROBS', '5'))
+    bool_operators = [
+        bool(int(os.environ.get('MMD_USE_ADD', '1'))),
+        bool(int(os.environ.get('MMD_USE_SUB', '1'))),
+        bool(int(os.environ.get('MMD_USE_MUL', '0'))),
+        bool(int(os.environ.get('MMD_USE_DIV', '0'))),
+    ]
+
+    selected_ops = [o for o, use_op in zip(Problem.valid_operators, bool_operators) if use_op]
+
     # generate problems and html
-    problems = generate_problems(5, ['+', '-'])
+    problems = generate_problems(num_probs, selected_ops)
     env = Environment(
         loader=FileSystemLoader('./templates'),
         trim_blocks=True,
@@ -26,8 +39,6 @@ def main(*args):
     #     f.write(output_html)
 
     # generate email
-    sender = os.environ['MMD_SENDER']
-    recipient = os.environ['MMD_RECIPIENT']
     subject = f"Mental Math Drill - {datetime.today().strftime('%m/%d')}"
 
     message = MIMEMultipart('alternative')
