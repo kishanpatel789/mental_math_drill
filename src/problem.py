@@ -37,6 +37,11 @@ class Problem():
             f"{'‾'*(self.max_num_len + 2)}",
         ]
 
+        if isinstance(self.answer, int):
+            self.display_answer = f"{self.answer:,d}"
+        else: 
+            self.display_answer = f"{self.answer:,.3f}"
+
     def render(self):
         return '\n'.join(self.display_components)
     

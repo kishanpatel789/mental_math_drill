@@ -37,7 +37,7 @@
 
         <h2>Answers</h2>
         {% for prob in problems %}
-        <p class="answer">{{ loop.index }}: {{ "{0:,}".format(prob.answer) }}</p>
+        <p class="answer">{{ loop.index }}: {{ prob.display_answer }}</p>
         {% endfor %}
 
     </body>
