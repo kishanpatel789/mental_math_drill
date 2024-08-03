@@ -56,7 +56,6 @@ def generate_problems(num_probs: int, operators = ['+', '-', '*', '/']):
     if len(operators) == 0:
         raise ValueError(f"Must choose at least one operator from the following: '{Problem.valid_operators}'. Received '{operators}'.")
 
-
     problems = []
     for _ in range(num_probs):
         operator = random.choice(operators)

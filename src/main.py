@@ -5,6 +5,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from datetime import datetime
 from problem import generate_problems, Problem
+from greeting import generate_greeting
 from jinja2 import Environment, FileSystemLoader
 
 def main(*args):
@@ -22,6 +23,7 @@ def main(*args):
     selected_ops = [o for o, use_op in zip(Problem.valid_operators, bool_operators) if use_op]
 
     # generate problems and html
+    greeting = generate_greeting()
     problems = generate_problems(num_probs, selected_ops)
     env = Environment(
         loader=FileSystemLoader('./templates'),
@@ -31,8 +33,8 @@ def main(*args):
     template_txt = env.get_template('template.txt')
     template_html = env.get_template('template.html')
 
-    output_txt = template_txt.render(problems=problems)
-    output_html = template_html.render(problems=problems)
+    output_txt = template_txt.render(problems=problems, greeting=greeting)
+    output_html = template_html.render(problems=problems, greeting=greeting)
     # with open('../out/out.txt', 'w') as f:
     #     f.write(output_txt)
     # with open('../out/out.html', 'w') as f:

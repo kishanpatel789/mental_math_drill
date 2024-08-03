@@ -1,3 +1,5 @@
+{{ greeting }}
+
 CHALLENGES
 
 {% for prob in problems %}
