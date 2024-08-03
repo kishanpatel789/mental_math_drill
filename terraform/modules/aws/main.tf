@@ -153,6 +153,11 @@ resource "aws_lambda_function" "lambda_function" {
     variables = {
       "MMD_SENDER"    = var.email_sender,
       "MMD_RECIPIENT" = var.email_recipient
+      "MMD_NUM_PROBS" = var.problem_count
+      "MMD_USE_ADD"   = var.problem_use_add
+      "MMD_USE_SUB"   = var.problem_use_sub
+      "MMD_USE_MUL"   = var.problem_use_mul
+      "MMD_USE_DIV"   = var.problem_use_div
     }
   }
 }
@@ -167,21 +172,21 @@ resource "aws_lambda_layer_version" "lambda_layer" {
 
 # eventbridge artifacts
 resource "aws_scheduler_schedule" "eventbridge_scheduler" {
-  name = "mental-math-drill-tf"
-  group_name = "default"
-  schedule_expression = "cron(${var.email_cron_schedule})"
+  name                         = "mental-math-drill-tf"
+  group_name                   = "default"
+  schedule_expression          = "cron(${var.email_cron_schedule})"
   schedule_expression_timezone = var.email_cron_schedule_timezone
 
   flexible_time_window {
     maximum_window_in_minutes = 5
-    mode = "FLEXIBLE"
+    mode                      = "FLEXIBLE"
   }
   target {
-    arn = aws_lambda_function.lambda_function.arn 
+    arn      = aws_lambda_function.lambda_function.arn
     role_arn = aws_iam_role.eventbridge_execution_role.arn
     retry_policy {
       maximum_event_age_in_seconds = 7200
-      maximum_retry_attempts = 2
+      maximum_retry_attempts       = 2
     }
   }
 }
