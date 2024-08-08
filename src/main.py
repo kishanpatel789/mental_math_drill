@@ -7,8 +7,19 @@ from datetime import datetime
 from problem import generate_problems, Problem
 from greeting import generate_greeting
 from jinja2 import Environment, FileSystemLoader
+from typing import Any, Dict
 
-def main(*args):
+def main(*args: Any) -> Dict[str, Any]:
+    """
+    Main function to generate math problems, render them into text and HTML templates, 
+    and send them via email using AWS SES.
+
+    Args:
+        *args (Any): Variable length argument list.
+
+    Returns:
+        Dict[str, Any]: A dictionary containing the status code and message ID of the sent email.
+    """
     # read environment vars
     sender = os.environ['MMD_SENDER']
     recipient = os.environ['MMD_RECIPIENT']
@@ -20,6 +31,7 @@ def main(*args):
         bool(int(os.environ.get('MMD_USE_DIV', '0'))),
     ]
 
+    # select operators based on environment variables
     selected_ops = [o for o, use_op in zip(Problem.valid_operators, bool_operators) if use_op]
 
     # generate problems and html

@@ -7,5 +7,11 @@ greeting_options = [
     "Remember that guy who couldn't add? Me neither.",
 ]
 
-def generate_greeting():
+def generate_greeting() -> str:
+    """
+    Selects and returns a random greeting from the list of greeting options.
+
+    Returns:
+        str: A randomly selected greeting.
+    """
     return random.choice(greeting_options)
